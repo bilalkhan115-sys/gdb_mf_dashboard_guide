@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyFreight Task Reference — GDB Logistics</title>
+  <style>
+/* ============================================================
+   MyFreight Task Reference — GDB Logistics
+   styles.css
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
+/* ── CSS Custom Properties ─────────────────────────────────── */
+:root {
+  /* Brand colours */
+  --navy:       #002061;
+  --navy-light: #0a2d7a;
+  --blue:       #0073FF;
+  --blue-dark:  #0058cc;
+  --cyan:       #4EF0F4;
+  --green:      #00B57B;
+  --lime:       #86C200;
+  --black:      #000000;
+  --white:      #FFFFFF;
+
+  /* Light mode tokens */
+  --bg:              #f0f2f7;
+  --surface:         #ffffff;
+  --surface-raised:  #f7f9fc;
+  --surface-inset:   #eef1f7;
+  --border:          #d4daea;
+  --border-strong:   #b0bbd4;
+  --text-primary:    #002061;
+  --text-secondary:  #3a4e7a;
+  --text-muted:      #7080a0;
+  --text-on-dark:    #ffffff;
+
+  /* Topbar */
+  --topbar-bg:    #002061;
+  --topbar-text:  #ffffff;
+
+  /* Left panel */
+  --panel-bg:       #ffffff;
+  --panel-border:   #d4daea;
+  --item-hover:     #eef4ff;
+  --item-active-bg: #e8f0fe;
+  --item-active-border: #0073FF;
+
+  /* Pills */
+  --pill-booking-bg:   #dbeafe;   --pill-booking-text:   #1e40af;
+  --pill-ops-bg:       #d1fae5;   --pill-ops-text:       #065f46;
+  --pill-docs-bg:      #fef9c3;   --pill-docs-text:      #854d0e;
+  --pill-financial-bg: #fce7f3;   --pill-financial-text: #9d174d;
+  --pill-error-bg:     #fee2e2;   --pill-error-text:     #991b1b;
+
+  /* Deadline pill */
+  --pill-deadline-bg:   #002061;  --pill-deadline-text:  #ffffff;
+
+  /* Auto pill */
+  --pill-auto-full-bg:    #d1fae5; --pill-auto-full-text:    #065f46;
+  --pill-auto-api-bg:     #dbeafe; --pill-auto-api-text:     #1e40af;
+  --pill-auto-recurring-bg: #fef9c3; --pill-auto-recurring-text: #854d0e;
+  --pill-auto-manual-bg:  #f1f5f9; --pill-auto-manual-text:  #475569;
+  --pill-auto-exception-bg: #fce7f3; --pill-auto-exception-text: #9d174d;
+
+  /* Dashboard banner */
+  --banner-bg:    #00B57B;
+  --banner-text:  #ffffff;
+
+  /* Detail card sections */
+  --card-action-border:  #0073FF;
+  --card-data-border:    #00B57B;
+  --card-cond-border:    #86C200;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(0,32,97,.08);
+  --shadow-md:  0 4px 12px rgba(0,32,97,.12);
+  --shadow-lg:  0 8px 24px rgba(0,32,97,.16);
+
+  /* Sizes */
+  --topbar-height: 56px;
+  --left-panel-width: 320px;
+  --border-radius: 8px;
+  --border-radius-sm: 5px;
+
+  /* Transitions */
+  --transition: 200ms ease;
+}
+
+[data-theme="dark"] {
+  --bg:              #0d1220;
+  --surface:         #151c30;
+  --surface-raised:  #1a2340;
+  --surface-inset:   #111828;
+  --border:          #253050;
+  --border-strong:   #3a4a70;
+  --text-primary:    #e8edf8;
+  --text-secondary:  #a8b8d8;
+  --text-muted:      #6070a0;
+
+  --panel-bg:        #151c30;
+  --panel-border:    #253050;
+  --item-hover:      #1e2a45;
+  --item-active-bg:  #1e3060;
+  --item-active-border: #0073FF;
+
+  --pill-booking-bg:   #1e3a6e;   --pill-booking-text:   #93c5fd;
+  --pill-ops-bg:       #0a3020;   --pill-ops-text:       #6ee7b7;
+  --pill-docs-bg:      #3a2d00;   --pill-docs-text:      #fde68a;
+  --pill-financial-bg: #3a0a20;   --pill-financial-text: #f9a8d4;
+  --pill-error-bg:     #3a0a0a;   --pill-error-text:     #fca5a5;
+
+  --pill-deadline-bg:   #0073FF;  --pill-deadline-text:  #ffffff;
+
+  --pill-auto-full-bg:    #0a3020; --pill-auto-full-text:    #6ee7b7;
+  --pill-auto-api-bg:     #1e3a6e; --pill-auto-api-text:     #93c5fd;
+  --pill-auto-recurring-bg: #3a2d00; --pill-auto-recurring-text: #fde68a;
+  --pill-auto-manual-bg:  #1a2340; --pill-auto-manual-text:  #94a3b8;
+  --pill-auto-exception-bg: #3a0a20; --pill-auto-exception-text: #f9a8d4;
+
+  --banner-bg:    #00875a;
+  --banner-text:  #ffffff;
+
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.3);
+  --shadow-md:  0 4px 12px rgba(0,0,0,.4);
+  --shadow-lg:  0 8px 24px rgba(0,0,0,.5);
+}
+
+/* ── Reset & Base ──────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 14px; -webkit-font-smoothing: antialiased; }
+
+body {
+  font-family: 'Montserrat', 'Proxima Nova', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background var(--transition), color var(--transition);
+}
+
+/* ── Topbar ────────────────────────────────────────────────── */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--topbar-height);
+  background: var(--topbar-bg);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 16px;
+  z-index: 100;
+  box-shadow: var(--shadow-md);
+}
+
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.brand-compass {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--topbar-text);
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.brand-tagline {
+  font-size: 8px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.topbar-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+
+.topbar-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--topbar-text);
+  letter-spacing: 0.01em;
+  flex: 1;
+}
+
+.topbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.theme-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: var(--border-radius-sm);
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.85);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+  white-space: nowrap;
+}
+
+.theme-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.16);
+  border-color: rgba(255,255,255,0.4);
+}
+
+.theme-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.theme-btn .icon { font-size: 14px; line-height: 1; }
+
+/* ── Dashboard Banner ──────────────────────────────────────── */
+.dashboard-banner {
+  background: var(--banner-bg);
+  color: var(--banner-text);
+  padding: 10px 20px;
+  font-size: 12.5px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: var(--topbar-height);
+}
+
+.dashboard-banner .banner-icon { font-size: 15px; flex-shrink: 0; }
+
+/* ── Page Header ───────────────────────────────────────────── */
+.page-header {
+  padding: 20px 20px 0;
+}
+
+.page-header-eyebrow {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 4px;
+}
+
+.page-header-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.page-header-subtitle {
+  margin-top: 4px;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+/* ── Filters ───────────────────────────────────────────────── */
+.filters-wrap {
+  padding: 14px 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  min-width: 52px;
+  flex-shrink: 0;
+}
+
+.filter-btn {
+  padding: 5px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.filter-btn:hover:not(.active) {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: var(--item-hover);
+}
+
+.filter-btn.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+
+.filter-btn.active.country { background: var(--blue); border-color: var(--blue); }
+.filter-btn.active.team-booking { background: #1e40af; border-color: #1e40af; }
+.filter-btn.active.team-operations { background: #065f46; border-color: #065f46; }
+.filter-btn.active.team-documentation { background: #854d0e; border-color: #854d0e; }
+.filter-btn.active.team-financial { background: #9d174d; border-color: #9d174d; }
+.filter-btn.active.team-error { background: #991b1b; border-color: #991b1b; }
+
+.filter-btn.non-ops-inactive {
+  opacity: 0.55;
+}
+
+/* ── Split Layout ──────────────────────────────────────────── */
+.split-wrap {
+  display: flex;
+  gap: 16px;
+  padding: 14px 20px 20px;
+  flex: 1;
+  min-height: 0;
+  height: calc(100vh - var(--topbar-height) - 196px);
+}
+
+.left-panel {
+  width: var(--left-panel-width);
+  flex-shrink: 0;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--border-radius);
+  overflow-y: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+.left-panel::-webkit-scrollbar { width: 5px; }
+.left-panel::-webkit-scrollbar-track { background: transparent; }
+.left-panel::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+.task-count {
+  padding: 10px 14px 8px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--panel-bg);
+  z-index: 1;
+}
+
+.task-group-label {
+  padding: 8px 14px 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all var(--transition);
+  border-bottom: 1px solid transparent;
+}
+
+.task-item:hover {
+  background: var(--item-hover);
+}
+
+.task-item.active {
+  background: var(--item-active-bg);
+  border-left-color: var(--item-active-border);
+  border-bottom-color: var(--border);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.task-item-name {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  flex: 1;
+  line-height: 1.3;
+}
+
+.task-item.active .task-item-name {
+  font-weight: 700;
+}
+
+/* ── Right Panel ───────────────────────────────────────────── */
+.right-panel {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+.right-panel::-webkit-scrollbar { width: 5px; }
+.right-panel::-webkit-scrollbar-track { background: transparent; }
+.right-panel::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+/* Placeholder */
+.placeholder {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  text-align: center;
+  padding: 40px;
+}
+
+.placeholder-icon {
+  font-size: 40px;
+  opacity: 0.35;
+}
+
+.placeholder-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.placeholder-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  max-width: 240px;
+  line-height: 1.5;
+}
+
+/* Detail panel */
+.detail-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  display: none;
+}
+
+.detail-panel.visible { display: block; }
+
+.detail-header {
+  padding: 18px 20px 14px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.detail-header::after {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(0,115,255,0.15);
+  pointer-events: none;
+}
+
+.detail-header::before {
+  content: '';
+  position: absolute;
+  bottom: -20px; right: 60px;
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: rgba(78,240,244,0.08);
+  pointer-events: none;
+}
+
+.detail-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+  position: relative;
+  z-index: 1;
+}
+
+.detail-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.pill-booking    { background: var(--pill-booking-bg);   color: var(--pill-booking-text); }
+.pill-operations { background: var(--pill-ops-bg);       color: var(--pill-ops-text); }
+.pill-documentation { background: var(--pill-docs-bg);   color: var(--pill-docs-text); }
+.pill-financial  { background: var(--pill-financial-bg); color: var(--pill-financial-text); }
+.pill-error      { background: var(--pill-error-bg);     color: var(--pill-error-text); }
+.pill-non-ops    { background: rgba(255,255,255,0.15);   color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.2); }
+
+.pill-deadline {
+  background: rgba(78,240,244,0.18);
+  color: var(--cyan);
+  border: 1px solid rgba(78,240,244,0.3);
+}
+
+.pill-auto-full      { background: var(--pill-auto-full-bg);      color: var(--pill-auto-full-text); }
+.pill-auto-api       { background: var(--pill-auto-api-bg);       color: var(--pill-auto-api-text); }
+.pill-auto-recurring { background: var(--pill-auto-recurring-bg); color: var(--pill-auto-recurring-text); }
+.pill-auto-manual    { background: var(--pill-auto-manual-bg);    color: var(--pill-auto-manual-text); }
+.pill-auto-exception { background: var(--pill-auto-exception-bg); color: var(--pill-auto-exception-text); }
+
+/* Detail body sections */
+.detail-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detail-card {
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.detail-card-header {
+  padding: 9px 14px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.detail-card-header .card-icon { font-size: 13px; }
+
+.card-action   .detail-card-header { background: rgba(0,115,255,0.08);  color: var(--blue);  border-bottom: 2px solid var(--card-action-border); }
+.card-data     .detail-card-header { background: rgba(0,181,123,0.08);  color: var(--green); border-bottom: 2px solid var(--card-data-border); }
+.card-cond     .detail-card-header { background: rgba(134,194,0,0.08);  color: #5a8a00;      border-bottom: 2px solid var(--card-cond-border); }
+
+[data-theme="dark"] .card-action .detail-card-header { background: rgba(0,115,255,0.12);  color: #60a5fa; }
+[data-theme="dark"] .card-data   .detail-card-header { background: rgba(0,181,123,0.12);  color: #6ee7b7; }
+[data-theme="dark"] .card-cond   .detail-card-header { background: rgba(134,194,0,0.10);  color: #bef264; }
+
+.detail-card-body {
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.detail-card-body ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.detail-card-body ul li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+}
+
+.detail-card-body ul li::before {
+  content: '✓';
+  color: var(--green);
+  font-weight: 800;
+  font-size: 11px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ── No-results ────────────────────────────────────────────── */
+.no-results {
+  padding: 24px 14px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ── Scope badges (right panel country row) ────────────────── */
+.scope-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 10px 20px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.scope-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.05em;
+}
+
+.scope-badge.active {
+  background: rgba(78,240,244,0.25);
+  color: var(--cyan);
+  border: 1px solid rgba(78,240,244,0.4);
+}
+
+.scope-badge.inactive {
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.35);
+  border: 1px solid rgba(255,255,255,0.12);
+  text-decoration: line-through;
+}
+
+/* ── Utility ───────────────────────────────────────────────── */
+.hidden { display: none !important; }
+
+/* ── Scrollbar global ──────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+  <!-- ── Topbar ─────────────────────────────────────────── -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <svg class="brand-compass" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="18" stroke="#4EF0F4" stroke-width="3" fill="none" stroke-dasharray="90 30" stroke-dashoffset="10"/>
+        <polygon points="20,6 24,20 20,34 16,20" fill="#ffffff"/>
+        <polygon points="20,6 24,20 20,18 16,20" fill="#0073FF"/>
+      </svg>
+      <div>
+        <div class="brand-name">GDB Logistics</div>
+        <div class="brand-tagline">WE DELIVER</div>
+      </div>
+    </div>
+    <div class="topbar-divider"></div>
+    <div class="topbar-title">MyFreight Task Reference</div>
+    <div class="topbar-controls">
+      <button class="theme-btn" id="btn-follow-system" onclick="setTheme('system')" title="Follow system theme">
+        <span class="icon">⊙</span> System
+      </button>
+      <button class="theme-btn" id="btn-light" onclick="setTheme('light')" title="Light mode">
+        <span class="icon">☀</span> Light
+      </button>
+      <button class="theme-btn" id="btn-dark" onclick="setTheme('dark')" title="Dark mode">
+        <span class="icon">◐</span> Dark
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Dashboard Banner ───────────────────────────────── -->
+  <div class="dashboard-banner">
+    <span class="banner-icon">📊</span>
+    <span>Start your daily work from the <strong>MyFreight Dashboard</strong> — it shows all shipments with Pending tasks across your team's active portfolio.</span>
+  </div>
+
+  <!-- ── Page Header ────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="page-header-eyebrow">Ocean Import · GloForEx</div>
+    <div class="page-header-title">MyFreight Task Reference</div>
+    <div class="page-header-subtitle">Select a task to view the required action, data checklist, and conditions. Use the filters to narrow by country or team.</div>
+  </div>
+
+  <!-- ── Filters ────────────────────────────────────────── -->
+  <div class="filters-wrap">
+    <div class="filter-row">
+      <span class="filter-label">Country</span>
+      <button class="filter-btn country active" data-country-filter="all" onclick="setCountryFilter('all')">All</button>
+      <button class="filter-btn country" data-country-filter="FR" onclick="setCountryFilter('FR')">FR</button>
+      <button class="filter-btn country" data-country-filter="DE" onclick="setCountryFilter('DE')">DE</button>
+      <button class="filter-btn country" data-country-filter="NL" onclick="setCountryFilter('NL')">NL</button>
+      <button class="filter-btn country" data-country-filter="IT" onclick="setCountryFilter('IT')">IT</button>
+      <button class="filter-btn country" data-country-filter="PL" onclick="setCountryFilter('PL')">PL</button>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">Team</span>
+      <button class="filter-btn active" data-team-filter="all" onclick="setTeamFilter('all')">All tasks</button>
+      <button class="filter-btn" data-team-filter="booking" onclick="setTeamFilter('booking')">Import Booking</button>
+      <button class="filter-btn" data-team-filter="documentation" onclick="setTeamFilter('documentation')">Import Documentation</button>
+      <button class="filter-btn" data-team-filter="operations" onclick="setTeamFilter('operations')">Import Operations</button>
+      <button class="filter-btn" data-team-filter="financial" onclick="setTeamFilter('financial')">Financial Handling</button>
+      <button class="filter-btn" data-team-filter="error" onclick="setTeamFilter('error')">Error Handling</button>
+    </div>
+  </div>
+
+  <!-- ── Split Layout ───────────────────────────────────── -->
+  <div class="split-wrap">
+    <div class="left-panel">
+      <div class="task-count" id="task-count">25 tasks</div>
+      <div id="task-list"></div>
+    </div>
+    <div class="right-panel">
+      <div id="detail-placeholder" class="placeholder">
+        <div class="placeholder-icon">🗂</div>
+        <div class="placeholder-text">Select a task</div>
+        <div class="placeholder-sub">Choose a task from the list to view the action guide, data checklist, and conditions.</div>
+      </div>
+      <div id="detail-panel" class="detail-panel"></div>
+    </div>
+  </div>
+
+  <script>
+/* ============================================================
+   MyFreight Task Reference — GDB Logistics
+   app.js
+   ============================================================ */
+
+/* ── Task Data ─────────────────────────────────────────────── */
+const TASKS = [
+  // STG-1 Booking
+  {
+    id: 't1',
+    task: 'Validate booking',
+    team: 'booking',
+    teamLabel: 'Import Booking',
+    auto: 'full',
+    autoLabel: 'Auto-complete',
+    deadline: { label: '5 days before ETD' },
+    scope: { FR: true, DE: false, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Confirm that all required booking fields are present and correct. For API bookings where all fields are populated, this task completes automatically. For manual or exception bookings, review the record and complete the task once validated.',
+    dataToCheck: [
+      'Consignee and shipper details',
+      'POL and POD',
+      'ETD and ETA',
+      'Carrier and service',
+      'Container type and count',
+      'Incoterm'
+    ],
+    conditional: null
+  },
+  {
+    id: 't2',
+    task: 'Request booking confirmation',
+    team: 'booking',
+    teamLabel: 'Import Booking',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: { label: '14 days before ETD' },
+    scope: { FR: true, DE: false, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Contact the carrier or agent to request formal confirmation that space has been allocated for this shipment.',
+    dataToCheck: [
+      'Carrier or agent contact details',
+      'Carrier shipment number and voyage details',
+      'Container type and quantity'
+    ],
+    conditional: null
+  },
+  {
+    id: 't3',
+    task: 'Booking confirmation',
+    team: 'booking',
+    teamLabel: 'Import Booking',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: { label: '5 days before ETD' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Record and confirm that space has been formally released by the carrier. Complete this task once written confirmation is received.',
+    dataToCheck: [
+      'Booking reference from carrier',
+      'Vessel and voyage match',
+      'Container type and count confirmed',
+      'POL and POD match original booking'
+    ],
+    conditional: 'DE: always mandatory. FR and NL: conditional on the customer — check whether confirmation is required before marking complete. Where confirmation has not been received and the deadline is approaching, escalate to the carrier.'
+  },
+  // STG-2 Departure
+  {
+    id: 't4',
+    task: 'Check agent update',
+    team: 'booking',
+    teamLabel: 'Import Booking',
+    auto: 'recurring',
+    autoLabel: 'Recurring',
+    deadline: { label: '3 days before ETD' },
+    scope: { FR: true, DE: false, NL: true, IT: false, PL: true },
+    nonOps: false,
+    action: 'Review the latest data pushed by the agent via the SnapLogic API and confirm it is correct. This task resets to Pending each time a new agent update is received — it does not need to be actioned if no update has come in.',
+    dataToCheck: [
+      'ETD and ETA',
+      'Vessel name',
+      'Carrier shipment number',
+      'Container number'
+    ],
+    conditional: 'Applies to API shipments only — not applicable for manual bookings. DE and IT are not yet live for this task due to no agent integrations. If data received from the agent contradicts what is in MF, do not overwrite — raise with your team lead.'
+  },
+  {
+    id: 't5',
+    task: 'Departure shipment data',
+    team: 'booking',
+    teamLabel: 'Import Booking',
+    auto: 'api-automated',
+    autoLabel: 'API-automated',
+    deadline: { label: '5 days before ETD' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Manually enter or verify all departure shipment data fields in MF. Complete the task once all required fields are populated and confirmed.',
+    dataToCheck: [
+      'POD and POL',
+      'ETD and ETA',
+      'Vessel name',
+      'Carrier',
+      'Carrier shipment number',
+      'Contract number'
+    ],
+    conditional: 'Applies to non-API shipments only. If the shipment is agent-sourced via API, use the Check agent update task instead. If any field cannot be confirmed before the deadline, log this in the shipment notes and escalate.'
+  },
+  {
+    id: 't6',
+    task: 'Agent Pre-alert',
+    team: 'booking',
+    teamLabel: 'Import Booking',
+    auto: 'full',
+    autoLabel: 'Auto-complete',
+    deadline: { label: '2 days after ETD' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'No action required. This task completes automatically when the agent pre-alert is received with all required data. If the task remains Pending after the expected pre-alert date, follow up with the agent.',
+    dataToCheck: [
+      'HBL number',
+      'MBL number',
+      'Container number'
+    ],
+    conditional: 'If the pre-alert arrives without one or more of the required fields, the task will remain Pending. In this case, contact the agent to request the missing information before the arrival deadline.'
+  },
+  // STG-3 Documentation
+  {
+    id: 't7',
+    task: 'Verify commercial invoice & packing list',
+    team: 'operations',
+    teamLabel: 'Import Operations',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: { label: '7 days before ETA' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Retrieve the commercial invoice and packing list from the shipment documents and cross-check against MF shipment data. Complete the task once all fields are verified and consistent.',
+    dataToCheck: [
+      'Consignee and shipper names',
+      'Cargo description and HS code',
+      'Declared value and currency',
+      'Incoterm',
+      'Package count, net weight and gross weight'
+    ],
+    conditional: 'If discrepancies are found between the invoice and MF data, do not complete the task — log the issue and contact the agent or customer to resolve. All fields must match before completion.'
+  },
+  {
+    id: 't8',
+    task: 'Verify Seaway bill',
+    team: 'operations',
+    teamLabel: 'Import Operations',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: { label: '5 days before ETA' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Verify the seaway bill against the MF shipment record. For API shipments, this task may auto-complete when the document is received from the agent. For manual shipments, review the document and complete manually once verified.',
+    dataToCheck: [
+      'Shipper and consignee parties',
+      'POL and POD',
+      'Container number',
+      'Cargo description and weight',
+      'Carrier and vessel details'
+    ],
+    conditional: 'If the seaway bill is not yet received by 5 days before ETA, follow up with the agent. If the document arrives via API, check auto-completion status — manual review may still be needed if the API data is incomplete.'
+  },
+  {
+    id: 't9',
+    task: 'HBL / TLX release',
+    team: 'operations',
+    teamLabel: 'Import Operations',
+    auto: 'full',
+    autoLabel: 'Auto-complete',
+    deadline: { label: '3 days before ETA' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'No action required. This task completes automatically when the HBL or TLX release is provided by the agent via API. If the task remains Pending, contact the agent to confirm release status.',
+    dataToCheck: [
+      'HBL or TLX release confirmation received',
+      'Release method (OBL surrender / TLX / SeaWaybill)'
+    ],
+    conditional: 'If the release document arrives outside the API (e.g. via email), manually upload the document to the shipment record and complete the task.'
+  },
+  {
+    id: 't10',
+    task: 'Verify insurance certificate',
+    team: 'operations',
+    teamLabel: 'Import Operations',
+    auto: 'exception',
+    autoLabel: 'Exception',
+    deadline: { label: '10 days after ATD' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Check whether insurance applies to this shipment. If it does, retrieve the insurance certificate and verify it against the cargo details. Complete the task once verified, or mark not applicable if insurance is not required.',
+    dataToCheck: [
+      'Incoterm (insurance typically required for CIF/CIP)',
+      'Insured value and currency',
+      'Coverage scope matches cargo',
+      'Certificate validity dates'
+    ],
+    conditional: 'This task is conditional on incoterm and country-specific rules. Check the Compliance tab Insurance flag in MF to determine applicability. MF configuration to drive task visibility by this flag is pending confirmation.'
+  },
+  {
+    id: 't11',
+    task: 'Check / complete customs data',
+    team: 'documentation',
+    teamLabel: 'Import Documentation',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: { label: '7 days before ETA' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Carry out a pre-arrival check to confirm that all data required for customs entry is complete and accurate in MF. Complete the task once all fields are confirmed ready. All fields must be resolved by 7 days before ETA to avoid delaying the customs submission.',
+    dataToCheck: [
+      'HS codes',
+      'Declared value and currency',
+      'Country of origin',
+      'Incoterm',
+      'Package count, weight and dimensions',
+      'Consignee EORI number'
+    ],
+    conditional: null
+  },
+  // STG-4 Customs
+  {
+    id: 't12',
+    task: 'Send documents to Customs',
+    team: 'documentation',
+    teamLabel: 'Import Documentation',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: { label: '2 days before ETA' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Execute this task in MF to trigger the webhook that sends the customs package to the Customs system. Do not send documents outside MF — the task execution is the trigger for the automated submission.',
+    dataToCheck: [
+      'Customs data check completed',
+      'No Documentation related open items on the shipment'
+    ],
+    conditional: 'If Customs rejects the submission, the task will automatically reset to Pending and the Dev Message Log will also be set to Pending. Review the rejection reason in the Dev Message Log, correct the data, and re-execute the task.'
+  },
+  {
+    id: 't13',
+    task: 'Customs clearance received',
+    team: 'documentation',
+    teamLabel: 'Import Documentation',
+    auto: 'full',
+    autoLabel: 'Auto-complete',
+    deadline: { label: 'On ATA' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'No action required. This task is created and immediately completed automatically when clearance confirmation is received from the Customs API. This task is a prerequisite gate — STG-6 (Carrier Release) cannot begin until this task is complete.',
+    dataToCheck: [
+      'Clearance reference number',
+      'Clearance date and time'
+    ],
+    conditional: 'If customs clearance is not received within the expected window after submission, check the Dev Message Log for any errors. If no error is logged, contact the customs broker or authority directly.'
+  },
+  // STG-5 Pre-arrival
+  {
+    id: 't14',
+    task: 'ETA Warning',
+    team: 'operations',
+    teamLabel: 'Import Operations',
+    auto: 'recurring',
+    autoLabel: 'Recurring',
+    deadline: null,
+    scope: { FR: false, DE: false, NL: false, IT: false, PL: false },
+    nonOps: false,
+    inactive: true,
+    action: 'Review the ETA deviation and assess operational impact. Coordinate with the customer and any delivery partners to adjust planning. Complete the task once the situation has been assessed and the customer informed.',
+    dataToCheck: [
+      'Revised ETA from MF live tracking',
+      'Original planned ETA',
+      'Deviation in days (early or late)',
+      'Downstream impact: carrier release, delivery planning, warehouse booking'
+    ],
+    conditional: 'This task becomes Pending automatically when MF live tracking shows the container arriving 7 or more days earlier or later than planned. It does not trigger for smaller deviations. If the deviation changes again, the task may reset.'
+  },
+  {
+    id: 't15',
+    task: 'Terminal update',
+    team: 'operations',
+    teamLabel: 'Import Operations',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: null,
+    scope: { FR: true, DE: false, NL: false, IT: true, PL: false },
+    nonOps: false,
+    action: 'Check the terminal system for the latest container status and update MF accordingly. Confirm port availability, berthing, and discharge information where available.',
+    dataToCheck: [
+      'Terminal arrival / discharge status',
+      'Container availability for pickup',
+      'Terminal reference or PIN if required',
+      'Any demurrage or free time implications'
+    ],
+    conditional: 'Applicable for FCL shipments entering via the ports of Marseille or Fos-sur-Mer (FR). Not applicable for DE, NL, or PL.'
+  },
+  // STG-6 Carrier Release
+  {
+    id: 't16',
+    task: 'Request carrier release',
+    team: 'operations',
+    teamLabel: 'Import Operations',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: { label: '7 days before ETA' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Send a release request by email to the carrier. Complete this task in MF once the request has been sent.',
+    dataToCheck: [
+      'Carrier contact details',
+      'Container number(s)',
+      'MBL reference',
+    ],
+    conditional: 'For some carriers a local invoice must be paid before receiving a release.'
+  },
+  {
+    id: 't17',
+    task: 'Carrier release confirmed',
+    team: 'operations',
+    teamLabel: 'Import Operations',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: { label: '3 days before ETA' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Check the port or carrier system to confirm that the container release has been granted. Complete this task in MF once release is confirmed.',
+    dataToCheck: [
+      'Release status in port/carrier system',
+      'PIN or release code if applicable',
+      'Free time start and end dates',
+      'Any holds (customs, freight, lien)'
+    ],
+    conditional: 'Currently manual — future integration with S)One, Ci5, or Twiki is planned to auto-complete this task, but is out of scope for the current phase. If release is refused or delayed, log the reason and escalate to the carrier account manager.'
+  },
+  // STG-7 Delivery
+  {
+    id: 't18',
+    task: 'Delivery planning / Arrival notification',
+    team: 'operations',
+    teamLabel: 'Import Operations',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: { label: '7 days before ETA' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Plan and coordinate the delivery ahead of the shipment\'s arrival. Notify the customer of the imminent arrival and confirm the estimated delivery date and time window. Use the OutSystems bulk tool to push the planned delivery date, time, and locations to MF.',
+    dataToCheck: [
+      'Customer contact and preferred notification method',
+      'Planned delivery date and time window',
+      'Delivery address in MF',
+      'Any special delivery instructions on the shipment'
+    ],
+    conditional: 'If the customer has specific notification requirements (e.g. pre-advice window, delivery slot booking), check the customer profile before sending. If delivery cannot be planned within 2 days of ATA, log the reason and notify the customer of the delay.'
+  },
+  {
+    id: 't19',
+    task: 'Transport Delivery Order',
+    team: 'operations',
+    teamLabel: 'Import Operations',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: { label: '2 days before ATA' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Execute the Transport Delivery Order task in MF. This triggers an API call to push the planned delivery data to Qargo or the assigned trucker. The task turns green on a successful push.',
+    dataToCheck: [
+      'Delivery address and contact',
+      'Planned delivery date and time',
+      'Container number(s)',
+      'Trucker or transport partner assigned in MF'
+    ],
+    conditional: 'If the task does not turn green after execution, the API push has failed. Check the Dev Message Log for an error entry and resolve before retrying. Do not contact the trucker directly to communicate delivery details — MF is the system of record.'
+  },
+  {
+    id: 't20',
+    task: 'Warehouse Inbound Order',
+    team: 'operations',
+    teamLabel: 'Import Operations',
+    auto: 'exception',
+    autoLabel: 'Exception',
+    deadline: { label: '3 days before ATA' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Create and submit a Warehouse Inbound Order to the receiving warehouse. Coordinate with the warehouse to confirm the inbound slot and any handling requirements.',
+    dataToCheck: [
+      'Warehouse name and address',
+      'Inbound booking reference',
+      'Cargo description, weight, and dimensions',
+      'Handling instructions (hazardous, temperature, fragile)'
+    ],
+    conditional: 'This task only applies where cargo is delivered to a warehouse before final delivery to the end customer. If the shipment goes direct to consignee, this task is not required.'
+  },
+  {
+    id: 't21',
+    task: 'LCL Devanning',
+    team: 'operations',
+    teamLabel: 'Import Operations',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: { label: '5 days after ATA' },
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: false,
+    action: 'Coordinate the devanning of the LCL container at the CFS or terminal. Confirm that all cargo for this shipment has been identified and separated correctly. Complete the task in MF once devanning is confirmed.',
+    dataToCheck: [
+      'CFS or terminal contact and location',
+      'LCL cargo description and marks',
+      'Number of packages and weight',
+      'Any cargo condition issues noted during devanning'
+    ],
+    conditional: 'LCL shipments only. Devanning is a prerequisite to customs clearance in the standard LCL flow — do not proceed to Submit documents to Customs until devanning is complete and the cargo is confirmed.'
+  },
+  {
+    id: 't22',
+    task: 'Request TCT + ERC (Le Havre only)',
+    team: 'operations',
+    teamLabel: 'Import Operations',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: { label: 'On customs clearance' },
+    scope: { FR: true, DE: false, NL: false, IT: true, PL: false },
+    nonOps: false,
+    action: 'Submit requests for the TCT (PCR) and ERC (leeg retour) to the relevant port authority or terminal at Le Havre. Complete the task in MF once both requests have been submitted.',
+    dataToCheck: [
+      'Container number(s)',
+      'Customs clearance reference',
+      'Terminal or port authority contact at Le Havre',
+      'Return depot details for empty container'
+    ],
+    conditional: 'Le Havre port operations only. This task is triggered on customs clearance. Not applicable for FR shipments entering through other ports (e.g. Marseille, Fos-sur-Mer).'
+  },
+  {
+    id: 't23',
+    task: 'Return empty container monitoring',
+    team: 'operations',
+    teamLabel: 'Import Operations',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: null,
+    scope: { FR: false, DE: true, NL: true, IT: false, PL: true },
+    nonOps: false,
+    action: 'Confirm that the empty container has been returned to the carrier depot and update MF accordingly. Complete the task once return is confirmed.',
+    dataToCheck: [
+      'Return depot location',
+      'Return reference or gate-out confirmation',
+      'Return deadline / last free day',
+      'Container condition at return'
+    ],
+    conditional: 'NL: mandatory. DE: recommended for record completeness. If the container is not returned by the carrier\'s free time deadline, detention charges will apply — monitor proactively.'
+  },
+  // STG-8 Financial
+  {
+    id: 't24',
+    task: 'Create invoice',
+    team: 'financial',
+    teamLabel: 'Financial Handling',
+    auto: 'manual',
+    autoLabel: 'Manual',
+    deadline: null,
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: true,
+    action: 'Create the outbound invoice to the customer in the financial system. Ensure all charges are captured correctly before issuing.',
+    dataToCheck: [
+      'All cost lines posted to the shipment',
+      'Customer billing details and purchase order reference',
+      'Applicable charge codes and VAT treatment',
+      'Agreed rates and any surcharges'
+    ],
+    conditional: 'Do not issue the invoice until all cost lines are confirmed and the shipment is operationally complete. If any charges are pending (e.g. detention, waiting time), decide whether to hold the invoice or issue with a supplementary charge later.'
+  },
+  // Error Handling
+  {
+    id: 't25',
+    task: 'Dev message log',
+    team: 'error',
+    teamLabel: 'Error Handling',
+    auto: 'recurring',
+    autoLabel: 'Recurring',
+    deadline: null,
+    scope: { FR: true, DE: true, NL: true, IT: true, PL: true },
+    nonOps: true,
+    action: 'Monitor the Dev Message Log on every shipment throughout the lifecycle. A Completed status is informational. A Pending status means an integration error or missing data requires your attention — review the log entry and resolve the issue.',
+    dataToCheck: [
+      'Log entry type (error / warning / info)',
+      'Affected task or integration point',
+      'Timestamp of the issue',
+      'Any related task that has also been reset to Pending'
+    ],
+    conditional: 'This log is persistent on every shipment and runs in parallel to all operational stages. It does not follow a sequential order. If multiple log entries are Pending simultaneously, prioritise those related to customs or carrier release as these are on the critical path.'
+  }
+];
+
+/* ── State ─────────────────────────────────────────────────── */
+let activeCountry = 'all';
+let activeTeam    = 'all';
+let selectedTask  = null;
+
+/* ── Theme ─────────────────────────────────────────────────── */
+const THEME_KEY         = 'mftasks-theme';
+const FOLLOW_SYSTEM_KEY = 'mftasks-follow-system';
+let followSystem = false;
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+}
+
+function getSystemTheme() {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function handleSystemChange(e) {
+  if (followSystem) applyTheme(e.matches ? 'dark' : 'light');
+}
+
+const _mq = window.matchMedia('(prefers-color-scheme: dark)');
+_mq.addEventListener('change', handleSystemChange);
+
+function initTheme() {
+  const savedTheme  = localStorage.getItem(THEME_KEY);
+  const savedFollow = localStorage.getItem(FOLLOW_SYSTEM_KEY) === 'true';
+  // Only restore follow-system if user has previously made an explicit choice
+  followSystem = savedFollow && savedTheme === null ? false : savedFollow;
+  applyTheme(followSystem ? getSystemTheme() : (savedTheme || getSystemTheme()));
+  updateThemeUI();
+}
+
+function updateThemeUI() {
+  const followBtn = document.getElementById('btn-follow-system');
+  const darkBtn   = document.getElementById('btn-dark');
+  const lightBtn  = document.getElementById('btn-light');
+  if (!followBtn) return;
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  followBtn.classList.toggle('active', followSystem);
+  darkBtn.disabled  = followSystem;
+  lightBtn.disabled = followSystem;
+  darkBtn.classList.toggle('active',  !followSystem && isDark);
+  lightBtn.classList.toggle('active', !followSystem && !isDark);
+}
+
+window.setTheme = function(mode) {
+  if (mode === 'system') {
+    if (followSystem) {
+      // Toggle off — revert to the system theme as a manual choice
+      followSystem = false;
+      const manualTheme = getSystemTheme();
+      localStorage.setItem(FOLLOW_SYSTEM_KEY, 'false');
+      localStorage.setItem(THEME_KEY, manualTheme);
+      applyTheme(manualTheme);
+    } else {
+      followSystem = true;
+      localStorage.setItem(FOLLOW_SYSTEM_KEY, 'true');
+      localStorage.removeItem(THEME_KEY);
+      applyTheme(getSystemTheme());
+    }
+  } else {
+    followSystem = false;
+    localStorage.setItem(FOLLOW_SYSTEM_KEY, 'false');
+    localStorage.setItem(THEME_KEY, mode);
+    applyTheme(mode);
+  }
+  updateThemeUI();
+};
+
+/* ── Filter Logic ──────────────────────────────────────────── */
+function getFilteredTasks() {
+  return TASKS.filter(t => {
+    if (t.inactive) return false;
+    if (activeCountry !== 'all' && !t.scope[activeCountry]) return false;
+    if (activeTeam !== 'all' && t.team !== activeTeam) return false;
+    return true;
+  });
+}
+
+function setCountryFilter(country) {
+  activeCountry = country;
+  document.querySelectorAll('[data-country-filter]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.countryFilter === country);
+  });
+  renderTaskList();
+}
+
+function setTeamFilter(team) {
+  activeTeam = team;
+  document.querySelectorAll('[data-team-filter]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.teamFilter === team);
+    if (team === 'all') {
+      btn.classList.remove('non-ops-inactive');
+    } else {
+      const isNonOps = ['financial','error'].includes(btn.dataset.teamFilter) && btn.dataset.teamFilter !== 'all';
+      btn.classList.toggle('non-ops-inactive', isNonOps && team !== btn.dataset.teamFilter);
+    }
+  });
+  renderTaskList();
+}
+
+/* ── Render ────────────────────────────────────────────────── */
+const AUTO_ICONS = {
+  'full':        '⚡',
+  'api-automated':'🔗',
+  'recurring':   '🔄',
+  'manual':      '✋',
+  'exception':   '⚠️'
+};
+
+const TEAM_ICONS = {
+  'booking':       '📋',
+  'operations':    '🚢',
+  'documentation': '📄',
+  'financial':     '💰',
+  'error':         '🔔'
+};
+
+function renderTaskList() {
+  const list   = document.getElementById('task-list');
+  const count  = document.getElementById('task-count');
+  const tasks  = getFilteredTasks();
+
+  if (selectedTask && !tasks.find(t => t.id === selectedTask.id)) {
+    selectedTask = null;
+    renderDetail(null);
+  }
+
+  list.innerHTML = '';
+
+  if (tasks.length === 0) {
+    list.innerHTML = '<div class="no-results">No tasks match the selected filters.</div>';
+    count.textContent = '0 tasks';
+    return;
+  }
+
+  count.textContent = `${tasks.length} task${tasks.length !== 1 ? 's' : ''}`;
+
+  tasks.forEach(task => {
+    const item = document.createElement('div');
+    item.className = 'task-item' + (selectedTask && selectedTask.id === task.id ? ' active' : '');
+    item.dataset.taskId = task.id;
+
+    item.innerHTML = `
+      <div class="task-item-name">${task.task}</div>
+      <span class="pill pill-${task.team}" style="font-size:9.5px;padding:2px 7px;">${task.teamLabel.replace('Import ','')}</span>
+    `;
+    item.addEventListener('click', () => selectTask(task));
+    list.appendChild(item);
+  });
+}
+
+function selectTask(task) {
+  selectedTask = task;
+  document.querySelectorAll('.task-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.taskId === task.id);
+  });
+  renderDetail(task);
+}
+
+function renderDetail(task) {
+  const placeholder = document.getElementById('detail-placeholder');
+  const panel       = document.getElementById('detail-panel');
+
+  if (!task) {
+    placeholder.classList.remove('hidden');
+    panel.classList.remove('visible');
+    return;
+  }
+
+  placeholder.classList.add('hidden');
+
+  // Scope badges
+  const scopeHTML = ['FR','DE','NL','IT','PL'].map(c =>
+    `<span class="scope-badge ${task.scope[c] ? 'active' : 'inactive'}">${c}</span>`
+  ).join('');
+
+  // Pills row
+  const deadlinePill = task.deadline
+    ? `<span class="pill pill-deadline">⏱ ${task.deadline.label}</span>`
+    : '';
+  const autoPill   = `<span class="pill pill-auto-${task.auto}">${AUTO_ICONS[task.auto] || ''} ${task.autoLabel}</span>`;
+  const teamPill   = `<span class="pill pill-${task.team}">${TEAM_ICONS[task.team] || ''} ${task.teamLabel}</span>`;
+  const nonOpsPill = task.nonOps ? `<span class="pill pill-non-ops">Non-ops</span>` : '';
+
+  // Checklist
+  const checklistHTML = task.dataToCheck.map(item =>
+    `<li>${item}</li>`
+  ).join('');
+
+  // Conditional section
+  const conditionalCard = task.conditional ? `
+    <div class="detail-card card-cond">
+      <div class="detail-card-header">
+        <span class="card-icon">⚠️</span>
+        Conditions &amp; exceptions
+      </div>
+      <div class="detail-card-body">${task.conditional}</div>
+    </div>
+  ` : '';
+
+  panel.innerHTML = `
+    <div class="detail-header">
+      <div class="detail-title">${task.task}</div>
+      <div class="scope-row">${scopeHTML}</div>
+      <div class="detail-pills" style="margin-top:10px;">${teamPill}${nonOpsPill}${deadlinePill}${autoPill}</div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-card card-action">
+        <div class="detail-card-header">
+          <span class="card-icon">▶</span>
+          Action required
+        </div>
+        <div class="detail-card-body">${task.action}</div>
+      </div>
+      <div class="detail-card card-data">
+        <div class="detail-card-header">
+          <span class="card-icon">✓</span>
+          Data to check
+        </div>
+        <div class="detail-card-body">
+          <ul>${checklistHTML}</ul>
+        </div>
+      </div>
+      ${conditionalCard}
+    </div>
+  `;
+
+  panel.classList.add('visible');
+}
+
+/* ── Init ──────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  renderTaskList();
+  renderDetail(null);
+});
+  </script>
+</body>
+</html>
