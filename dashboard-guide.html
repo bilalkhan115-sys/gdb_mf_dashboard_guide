@@ -223,7 +223,7 @@
     font-weight: 300;
     color: var(--text-secondary);
     line-height: 1.6;
-    max-width: 600px;
+    max-width: 800px;
   }
 
   /* ── Progress bar ── */
@@ -803,7 +803,7 @@
 
 <!-- Page header -->
 <div class="page-header">
-  <div class="eyebrow">Ocean Import · GloForEx</div>
+  <div class="eyebrow">Freight Forwarding · Ocean Import</div>
   <h1 class="page-title">How to use the MyFreight Dashboard</h1>
   <p class="page-subtitle">A step-by-step walkthrough of how to find, filter, assign, and action tasks using the MyFreight Dashboard.</p>
 </div>
@@ -874,12 +874,12 @@ const STEPS = [
     desc: "Read the task list and identify which tasks need to be worked on.",
     screenshot: "3rd",
     hotspots: [
-      { num: 1, left: "8%",  top: "38%" },
-      { num: 2, left: "88%", top: "38%" },
-      { num: 3, left: "48%", top: "38%" }
+      { num: 1, left: "8%",  top: "15%" },
+      { num: 2, left: "96%", top: "25%" },
+      { num: 3, left: "25%", top: "50%" }
     ],
     callouts: [
-      { num: 1, type: "info", text: "<strong>Task name</strong> — identifies the specific task type. Use the MF Task Reference to understand what each task requires." },
+      { num: 1, type: "info", text: "<strong>Task name</strong> — The name of the specific task. The Task Reference Guide explains what checks or actions each task requires." },
       { num: 2, type: "info", text: "<strong>Due date</strong> (last column) — tasks shown in red or with a past date are overdue. Sort by due date to prioritise." },
       { num: 3, type: "info", text: "<strong>Departure / Arrival / Customer</strong> — use these columns to understand the shipment context before deciding what to action first." }
     ],
@@ -887,14 +887,14 @@ const STEPS = [
   },
 {
     num: 4,
-    title: "Important: the 'Unassigned only' setting",
+    title: "Important: the 'Unassigned only' checkbox",
     desc: "Always enable this before selecting a task category — it's the most common usage mistake.",
     screenshot: "4th",
     isWarning: true,
     hotspots: [
-      { num: "!", warn: true, left: "72%", top: "22%" },
-      { num: 1,              left: "72%", top: "38%" },
-      { num: 2,              left: "48%", top: "65%" }
+      { num: "!", warn: true, left: "58%", top: "8%" },
+      { num: 1,              left: "48%", top: "8%" },
+      { num: 2,              left: "44%", top: "65%" }
     ],
     callouts: [
       { num: "!", type: "warn", text: "<strong>If 'Unassigned only' is not ticked</strong> when you select a task category, MyFreight automatically adds your username to the assignee filter. This means you only see tasks already assigned to you — hiding all unassigned tasks from the list." },
@@ -911,7 +911,7 @@ const STEPS = [
     hotspots: [
       { num: 1, left: "3%",  top: "38%" },
       { num: 2, left: "48%", top: "85%" },
-      { num: 3, left: "72%", top: "85%" }
+      { num: 3, left: "70%", top: "85%" }
     ],
     callouts: [
       { num: 1, type: "info", text: "<strong>Checkboxes</strong> — tick one or more rows to select tasks. You can select multiple tasks in one go to batch-assign them." },
@@ -926,16 +926,16 @@ const STEPS = [
     desc: "Switch to your personal view and click through to each shipment.",
     screenshot: '6th',
     hotspots: [
-      { num: 1, left: "72%", top: "22%" },
-      { num: 2, left: "8%",  top: "45%" },
-      { num: 3, left: "48%", top: "75%" }
+      { num: 1, left: "47%", top: "40%" },
+      { num: 2, left: "8%",  top: "65%" },
+      //{ num: 3, left: "48%", top: "75%" }
     ],
     callouts: [
       { num: 1, type: "info", text: "Uncheck <strong>'Unassigned only'</strong> — this switches the view to show tasks assigned to you personally, since your name is already in the assignee filter." },
       { num: 2, type: "info", text: "<strong>Click any task row</strong> — this takes you directly to the shipment record in MyFreight where you can perform the required action." },
-      { num: 3, type: "info", text: "Not sure what a task requires? Consult the <strong>MF Task Reference</strong> — it documents the exact action, data to check, and conditions for every task in the process." }
+      { num: 3, type: "info", text: "Not sure what a task requires? Consult the <strong>Task Reference Guide</strong> — it documents the exact action, data to check, and conditions for every task in the process." }
     ],
-    instruction: "Once you've assigned tasks to yourself, untick <strong>'Unassigned only'</strong> to switch to your personal task view. Your assigned tasks will now appear in the list. Click on any row to open the shipment directly — MyFreight will take you to the relevant record where you can carry out the required action. Use the MF Task Reference if you need a reminder of what each task requires before you start."
+    instruction: "Once you've assigned tasks to yourself, untick <strong>'Unassigned only'</strong> to switch to your personal task view. Your assigned tasks will now appear in the list. Click on any row to open the shipment directly — MyFreight will take you to the relevant record where you can carry out the required action. Use the Task Reference Guide if you need a reminder of what each task requires before you start."
   }
 ];
 
