@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyFreight Dashboard Guide · GDB Logistics</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ── Brand tokens ── */
+  :root {
+    --navy:       #002061;
+    --blue:       #0073FF;
+    --cyan:       #4EF0F4;
+    --green:      #00B57B;
+    --lime:       #86C200;
+    --white:      #FFFFFF;
+    --black:      #000000;
+
+    /* Light theme */
+    --bg:         #F4F6FA;
+    --surface:    #FFFFFF;
+    --surface2:   #EEF1F8;
+    --border:     #D6DCF0;
+    --text-primary:   #002061;
+    --text-secondary: #4A5578;
+    --text-muted:     #8892B0;
+    --topbar-bg:  #002061;
+    --topbar-text:#FFFFFF;
+    --banner-bg:  #00B57B;
+    --banner-text:#FFFFFF;
+    --pill-bg:    #EEF1F8;
+    --pill-text:  #002061;
+    --step-num-bg: #0073FF;
+    --step-num-text: #fff;
+    --card-shadow: 0 2px 12px rgba(0,32,97,0.08);
+    --card-shadow-hover: 0 6px 28px rgba(0,32,97,0.14);
+    --warning-bg: #FFF8E6;
+    --warning-border: #F5C842;
+    --warning-text: #7A5C00;
+    --nav-btn-bg: #EEF1F8;
+    --nav-btn-text: #002061;
+    --nav-btn-hover: #0073FF;
+    --nav-btn-hover-text: #fff;
+    --progress-track: #D6DCF0;
+    --screenshot-border: #D6DCF0;
+    --annotation-bg: #0073FF;
+    --annotation-text: #fff;
+    --callout-bg: #EEF8FF;
+    --callout-border: #0073FF;
+  }
+
+  [data-theme="dark"] {
+    --bg:         #0A0F1E;
+    --surface:    #111827;
+    --surface2:   #1A2236;
+    --border:     #1E2D4A;
+    --text-primary:   #E8EDFB;
+    --text-secondary: #A0AECB;
+    --text-muted:     #5A6A8A;
+    --topbar-bg:  #060D1A;
+    --topbar-text:#FFFFFF;
+    --banner-bg:  #007A52;
+    --banner-text:#FFFFFF;
+    --pill-bg:    #1A2236;
+    --pill-text:  #A0AECB;
+    --card-shadow: 0 2px 16px rgba(0,0,0,0.4);
+    --card-shadow-hover: 0 6px 32px rgba(0,115,255,0.2);
+    --warning-bg: #1E1600;
+    --warning-border: #A07800;
+    --warning-text: #F0C040;
+    --nav-btn-bg: #1A2236;
+    --nav-btn-text: #A0AECB;
+    --nav-btn-hover: #0073FF;
+    --nav-btn-hover-text: #fff;
+    --progress-track: #1A2236;
+    --screenshot-border: #1E2D4A;
+    --callout-bg: #0A1525;
+    --callout-border: #0073FF;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ── Topbar ── */
+  .topbar {
+    background: var(--topbar-bg);
+    color: var(--topbar-text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    height: 52px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .topbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .compass-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .brand-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+
+  .brand-tagline {
+    font-size: 7px;
+    font-weight: 600;
+    color: var(--cyan);
+    letter-spacing: 0.18em;
+    margin-top: 1px;
+  }
+
+  .topbar-divider {
+    width: 1px;
+    height: 24px;
+    background: rgba(255,255,255,0.15);
+    margin: 0 14px;
+  }
+
+  .topbar-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 0.03em;
+  }
+
+  .theme-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .theme-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+  }
+
+  .theme-btn:hover { background: rgba(255,255,255,0.18); color: #fff; }
+  .theme-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+  /* ── Banner ── */
+  .banner {
+    background: var(--banner-bg);
+    color: var(--banner-text);
+    padding: 10px 28px;
+    font-size: 12.5px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.01em;
+  }
+
+  .banner-icon { font-size: 14px; }
+
+  /* ── Page header ── */
+  .page-header {
+    padding: 36px 40px 24px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--blue);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .page-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .page-subtitle {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 600px;
+  }
+
+  /* ── Progress bar ── */
+  .progress-wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 40px 20px;
+  }
+
+  .progress-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .progress-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .step-counter {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: 0.05em;
+  }
+
+  .progress-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .dot {
+    width: 28px;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--progress-track);
+    transition: background 0.3s, width 0.3s;
+    cursor: pointer;
+  }
+
+  .dot.active { background: var(--blue); width: 36px; }
+  .dot.done { background: var(--green); }
+
+  /* ── Step card ── */
+  .step-container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 40px 40px;
+  }
+
+  .step-card {
+    background: var(--surface);
+    border-radius: 14px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    animation: fadeSlide 0.35s ease both;
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .step-header {
+    background: var(--navy);
+    padding: 22px 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(0,115,255,0.3);
+  }
+
+  .step-header-text { flex: 1; }
+
+  .step-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .step-desc {
+    font-size: 12.5px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.5;
+  }
+
+  /* ── Screenshot area ── */
+  .screenshot-area {
+    padding: 24px 28px 0;
+    position: relative;
+  }
+
+  .screenshot-frame {
+    border: 2px solid var(--screenshot-border);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    background: #0A0F1E;
+  }
+
+  .screenshot-frame img {
+    width: 100%;
+    display: block;
+  }
+  .screenshot-frame.small-screenshot img {
+    width: auto;
+  }
+
+  /* Annotation hotspots */
+  .hotspot {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    pointer-events: none;
+  }
+
+  .hotspot-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,115,255,0.6), 0 2px 8px rgba(0,0,0,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(0,115,255,0), 0 2px 8px rgba(0,0,0,0.4); }
+  }
+
+  .hotspot-line {
+    height: 2px;
+    background: var(--blue);
+    opacity: 0.7;
+  }
+
+  /* Warning hotspot */
+  .hotspot-num.warn {
+    background: #F5A623;
+    animation: pulseWarn 2s ease-in-out infinite;
+  }
+
+  @keyframes pulseWarn {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(245,166,35,0.6), 0 2px 8px rgba(0,0,0,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(245,166,35,0), 0 2px 8px rgba(0,0,0,0.4); }
+  }
+
+  /* ── Callouts ── */
+  .callouts {
+    padding: 20px 28px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .callout {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: var(--callout-bg);
+    border-left: 3px solid var(--callout-border);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 14px;
+  }
+
+  .callout.warn {
+    background: var(--warning-bg);
+    border-left-color: var(--warning-border);
+  }
+
+  .callout-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .callout.warn .callout-num { background: #F5A623; }
+
+  .callout-text {
+    font-size: 12.5px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .callout-text strong {
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .callout.warn .callout-text { color: var(--warning-text); }
+  .callout.warn .callout-text strong { color: var(--warning-text); }
+
+  /* ── Instruction block ── */
+  .instruction {
+    padding: 20px 28px 24px;
+  }
+
+  .instruction-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .instruction-text {
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* ── Warning box (step 4) ── */
+  .warning-box {
+    margin: 0 28px 24px;
+    background: var(--warning-bg);
+    border: 1px solid var(--warning-border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .warning-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .warning-text {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--warning-text);
+    line-height: 1.65;
+  }
+
+  .warning-text strong { font-weight: 700; }
+
+  /* ── Navigation ── */
+  .nav-row {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 40px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 22px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--nav-btn-bg);
+    color: var(--nav-btn-text);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .nav-btn:hover:not(:disabled) {
+    background: var(--nav-btn-hover);
+    color: var(--nav-btn-hover-text);
+    border-color: var(--nav-btn-hover);
+  }
+
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .nav-btn.primary {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+  }
+
+  .nav-btn.primary:hover:not(:disabled) {
+    background: #0060d8;
+    border-color: #0060d8;
+  }
+
+  .nav-btn.done-btn {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+  }
+
+  /* ── Completion screen ── */
+  .completion {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 40px 48px;
+    text-align: center;
+    animation: fadeSlide 0.4s ease both;
+  }
+
+  .completion-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px 40px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .completion-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+  }
+
+  .completion-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+
+  .completion-text {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 500px;
+    margin: 0 auto 28px;
+  }
+
+  .completion-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .recap-item {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 14px 12px;
+    text-align: left;
+  }
+
+  .recap-num {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .recap-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+
+  .restart-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--nav-btn-bg);
+    color: var(--nav-btn-text);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .restart-btn:hover { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+  /* ── Screenshot placeholder (for steps without screenshots) ── */
+  .no-screenshot {
+    margin: 0 28px;
+    padding: 32px;
+    background: var(--surface2);
+    border-radius: 8px;
+    border: 1px dashed var(--border);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+
+  /* ── Lightbox ── */
+  .screenshot-frame img { cursor: zoom-in; }
+  
+  .screenshot-frame.small-screenshot {
+    background: transparent;
+    border: none;
+    display: flex;
+    justify-content: flex-start;
+  }
+  .screenshot-frame.small-screenshot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .screenshot-frame.small-screenshot img {
+    width: 100px;
+    max-width: 240px;
+    max-height: 320px;
+    border-radius: 6px;
+    border: 1px solid var(--screenshot-border);
+  }
+
+  #lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    animation: lbFadeIn 0.2s ease;
+  }
+  #lightbox.open { display: flex; }
+  @keyframes lbFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  #lightbox-img {
+    max-width: 92vw;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 20px 80px rgba(0,0,0,0.7);
+    object-fit: contain;
+    animation: lbZoomIn 0.25s ease;
+  }
+  @keyframes lbZoomIn {
+    from { transform: scale(0.92); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  #lightbox-close {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    line-height: 1;
+  }
+#lightbox-close:hover { background: rgba(255,255,255,0.25); }
+  #lightbox-hint {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.08em;
+    pointer-events: none;
+  }
+
+  /* ── Hotspot markers ── */
+  .hotspot-num {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #0073FF;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    pointer-events: none;
+    animation: pulseHotspot 2s ease-in-out infinite;
+    z-index: 10;
+  }
+  .hotspot-num.warn {
+    background: #F5A623;
+    animation: pulseWarn 2s ease-in-out infinite;
+  }
+  @keyframes pulseHotspot {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,115,255,0.6), 0 2px 8px rgba(0,0,0,0.4); }
+    50%       { box-shadow: 0 0 0 7px rgba(0,115,255,0), 0 2px 8px rgba(0,0,0,0.4); }
+  }
+</style>
+</head>
+<body data-theme="light">
+
+<!-- Topbar -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">
+      <svg class="compass-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="18" stroke="#4EF0F4" stroke-width="2.5"/>
+        <circle cx="20" cy="20" r="12" stroke="#0073FF" stroke-width="2"/>
+        <polygon points="20,8 23,20 20,17 17,20" fill="#0073FF"/>
+        <polygon points="20,32 17,20 20,23 23,20" fill="#fff" opacity="0.5"/>
+        <polygon points="8,20 20,17 17,20 20,23" fill="#fff" opacity="0.5"/>
+        <polygon points="32,20 20,23 23,20 20,17" fill="#0073FF" opacity="0.6"/>
+      </svg>
+      <div class="brand-text">
+        <span class="brand-name">GDB Logistics</span>
+        <span class="brand-tagline">WE DELIVER</span>
+      </div>
+    </div>
+    <div class="topbar-divider"></div>
+    <span class="topbar-title">MyFreight Dashboard Guide</span>
+  </div>
+  <div class="theme-controls">
+    <button class="theme-btn active" id="btnSystem" onclick="setTheme('system')">System</button>
+    <button class="theme-btn" id="btnLight" onclick="setTheme('light')">☀ Light</button>
+    <button class="theme-btn" id="btnDark" onclick="setTheme('dark')">◗ Dark</button>
+  </div>
+</header>
+
+<!-- Banner -->
+<div class="banner">
+  <span class="banner-icon">📋</span>
+  <span>Start your daily work from the <strong>MyFreight Dashboard</strong> — it shows all shipments with pending tasks for GDB Forwarding.</span>
+</div>
+
+<!-- Page header -->
+<div class="page-header">
+  <div class="eyebrow">Ocean Import · GloForEx</div>
+  <h1 class="page-title">How to use the MyFreight Dashboard</h1>
+  <p class="page-subtitle">A step-by-step walkthrough of how to find, filter, assign, and action tasks using the MyFreight Dashboard.</p>
+</div>
+
+<!-- Progress bar -->
+<div class="progress-wrap">
+  <div class="progress-header">
+    <span class="progress-label">Progress</span>
+    <span class="step-counter" id="stepCounter">Step 1 of 6</span>
+  </div>
+  <div class="progress-dots" id="progressDots"></div>
+</div>
+
+<!-- Step container -->
+<div class="step-container" id="stepContainer"></div>
+
+<!-- Nav row -->
+<div class="nav-row" id="navRow">
+  <button class="nav-btn" id="btnPrev" onclick="goStep(-1)">← Previous</button>
+  <button class="nav-btn primary" id="btnNext" onclick="goStep(1)">Next →</button>
+</div>
+
+
+<!-- Lightbox -->
+<div id="lightbox" onclick="closeLightbox(event)">
+  <button id="lightbox-close" onclick="closeLightbox()">&times;</button>
+  <img id="lightbox-img" src="" alt="Screenshot fullscreen" />
+  <div id="lightbox-hint">Press ESC or click outside to close</div>
+</div>
+
+<script>
+const STEPS = [
+{
+    num: 1,
+    title: "Start from the Dashboard",
+    desc: "Your daily starting point for all task work in MyFreight.",
+    screenshot: "1st",
+    hotspots: [
+      { num: 1, left: "11%", top: "10%" },
+      { num: 2, left: "35%", top: "10%" },
+      { num: 3, left: "12%", top: "46%" }
+    ],
+    callouts: [
+      { num: 1, type: "info", text: "<strong>Tasks overdue</strong> — the most important panel. This shows how many tasks are past their due date and need immediate attention. These are shown as red tasks in the dashboard." },
+      { num: 2, type: "info", text: "<strong>Tasks pending</strong> — shows the total count of pending (yellow) tasks across all shipments." },
+      { num: 3, type: "info", text: "<strong>Task list</strong> — the main working area below the stat panels. This is where you find, filter, and action your tasks." }
+    ],
+    instruction: "Open MyFreight and navigate to the Dashboard from the top navigation bar. The four stat panels at the top give you an immediate overview of your workload. Focus on <strong>Overdue Tasks</strong> (red) first — these need to be resolved as a priority before working through pending (yellow) or To Do (blue) tasks."
+  },
+{
+    num: 2,
+    title: "Select your Task category",
+    desc: "Filter the task list to show only the tasks relevant to this category.",
+    screenshot: "2nd",
+    hotspots: [
+      { num: 1, left: "14%", top: "46%" },
+      { num: 2, left: "17%", top: "65%" }
+    ],
+    callouts: [
+      { num: 1, type: "info", text: "<strong>Task category filter</strong> — click the first filter box (labelled with the current task category name) to open this dropdown. Select the task category that matches the type of task you want to search for." },
+      { num: 2, type: "info", text: "Available categories: <strong>Import Bookings, Import Documentation, Import Operations, Financial Handling.</strong> Each maps to a specific set of tasks in the process." }
+    ],
+    instruction: "Click the first filter box on the left of the filter row (it shows the currently active task category name). A dropdown will appear listing all available task categories. Select the one that corresponds to the type of task you are working on (booking, documentation etc.). The task list will immediately refresh to show only tasks assigned to that category."
+  },
+{
+    num: 3,
+    title: "Review open tasks for a specific category",
+    desc: "Read the task list and identify which tasks need to be worked on.",
+    screenshot: "3rd",
+    hotspots: [
+      { num: 1, left: "8%",  top: "38%" },
+      { num: 2, left: "88%", top: "38%" },
+      { num: 3, left: "48%", top: "38%" }
+    ],
+    callouts: [
+      { num: 1, type: "info", text: "<strong>Task name</strong> — identifies the specific task type. Use the MF Task Reference to understand what each task requires." },
+      { num: 2, type: "info", text: "<strong>Due date</strong> (last column) — tasks shown in red or with a past date are overdue. Sort by due date to prioritise." },
+      { num: 3, type: "info", text: "<strong>Departure / Arrival / Customer</strong> — use these columns to understand the shipment context before deciding what to action first." }
+    ],
+    instruction: "Scan the task list for your task category. The <strong>Due Date</strong> column (far right) is your priority guide — overdue tasks appear with dates in the past and should be actioned first. You can also see departure port, arrival port, load type, customer name, and shipment references to help you triage the list."
+  },
+{
+    num: 4,
+    title: "Important: the 'Unassigned only' setting",
+    desc: "Always enable this before selecting a task category — it's the most common usage mistake.",
+    screenshot: "4th",
+    isWarning: true,
+    hotspots: [
+      { num: "!", warn: true, left: "72%", top: "22%" },
+      { num: 1,              left: "72%", top: "38%" },
+      { num: 2,              left: "48%", top: "65%" }
+    ],
+    callouts: [
+      { num: "!", type: "warn", text: "<strong>If 'Unassigned only' is not ticked</strong> when you select a task category, MyFreight automatically adds your username to the assignee filter. This means you only see tasks already assigned to you — hiding all unassigned tasks from the list." },
+      { num: 1, type: "info", text: "<strong>Correct starting point:</strong> tick 'Unassigned only' before selecting your task category. Your name will appear in the second filter box but will be dimmed — this means it is active as a filter label but is being ignored, because you are specifically searching for unassigned tasks." },
+      { num: 2, type: "info", text: "<strong>Result when misconfigured</strong> (shown here): the task list shows 'No data' — not because there are no tasks, but because the assignee filter is hiding them." }
+    ],
+    instruction: "Before selecting a task category, always check that <strong>'Unassigned only'</strong> is ticked in the top-right of the task section. This ensures you see the full pool of open, unassigned tasks for your task category — which is the correct starting point for daily task work. If the list appears empty after selecting your task category, this is the first thing to check."
+  },
+{
+    num: 5,
+    title: "Assign tasks to yourself or a colleague",
+    desc: "Select the tasks you'll work on and assign them via the action bar.",
+    screenshot: "5th",
+    hotspots: [
+      { num: 1, left: "3%",  top: "38%" },
+      { num: 2, left: "48%", top: "85%" },
+      { num: 3, left: "72%", top: "85%" }
+    ],
+    callouts: [
+      { num: 1, type: "info", text: "<strong>Checkboxes</strong> — tick one or more rows to select tasks. You can select multiple tasks in one go to batch-assign them." },
+      { num: 2, type: "info", text: "<strong>Bottom action bar</strong> — appears automatically once at least one task is selected. Shows the count of selected tasks and the available actions." },
+      { num: 3, type: "info", text: "<strong>Assignee menu</strong> — click here to assign selected tasks. The menu shows a hierarchy: task category → individual. Navigate to your name or a colleague's name to assign." }
+    ],
+    instruction: "Tick the checkboxes on the rows you intend to work on. A floating action bar will appear at the bottom of the screen showing how many tasks are selected. Click the assignee area in the action bar to open the task category/person hierarchy, then select your name (or a colleague's) to assign all selected tasks in one action. Once assigned, the tasks will show your name in the Assignee column."
+  },
+{
+    num: 6,
+    title: "Work your assigned tasks",
+    desc: "Switch to your personal view and click through to each shipment.",
+    screenshot: '6th',
+    hotspots: [
+      { num: 1, left: "72%", top: "22%" },
+      { num: 2, left: "8%",  top: "45%" },
+      { num: 3, left: "48%", top: "75%" }
+    ],
+    callouts: [
+      { num: 1, type: "info", text: "Uncheck <strong>'Unassigned only'</strong> — this switches the view to show tasks assigned to you personally, since your name is already in the assignee filter." },
+      { num: 2, type: "info", text: "<strong>Click any task row</strong> — this takes you directly to the shipment record in MyFreight where you can perform the required action." },
+      { num: 3, type: "info", text: "Not sure what a task requires? Consult the <strong>MF Task Reference</strong> — it documents the exact action, data to check, and conditions for every task in the process." }
+    ],
+    instruction: "Once you've assigned tasks to yourself, untick <strong>'Unassigned only'</strong> to switch to your personal task view. Your assigned tasks will now appear in the list. Click on any row to open the shipment directly — MyFreight will take you to the relevant record where you can carry out the required action. Use the MF Task Reference if you need a reminder of what each task requires before you start."
+  }
+];
+
+let current = 0;
+
+function buildDots() {
+  const wrap = document.getElementById('progressDots');
+  wrap.innerHTML = '';
+  STEPS.forEach((s, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i < current ? ' done' : '') + (i === current ? ' active' : '');
+    d.title = `Step ${i+1}: ${s.title}`;
+    d.onclick = () => jumpStep(i);
+    wrap.appendChild(d);
+  });
+}
+
+function jumpStep(i) {
+  current = i;
+  render();
+}
+
+function goStep(dir) {
+  const next = current + dir;
+  if (next < 0 || next > STEPS.length) return;
+  current = next;
+  render();
+}
+
+function render() {
+  buildDots();
+  document.getElementById('stepCounter').textContent =
+    current < STEPS.length ? `Step ${current + 1} of ${STEPS.length}` : 'Complete';
+
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+  const navRow  = document.getElementById('navRow');
+  const container = document.getElementById('stepContainer');
+
+  btnPrev.disabled = current === 0;
+
+  if (current >= STEPS.length) {
+    // Completion screen
+    navRow.style.display = 'none';
+    container.innerHTML = `
+      <div class="completion">
+        <div class="completion-card">
+          <div class="completion-icon">✅</div>
+          <h2 class="completion-title">You're ready to use the Dashboard</h2>
+          <p class="completion-text">You've completed the MyFreight Dashboard walkthrough. You now know how to filter tasks by task category, use the Unassigned only setting correctly, assign tasks, and navigate to shipments.</p>
+          <div class="completion-steps">
+            ${STEPS.map((s,i) => `<div class="recap-item"><div class="recap-num">Step ${i+1}</div><div class="recap-label">${s.title}</div></div>`).join('')}
+          </div>
+          <button class="restart-btn" onclick="restartGuide()">↩ Start again</button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  navRow.style.display = 'flex';
+  const isLast = current === STEPS.length - 1;
+  btnNext.textContent = isLast ? 'Finish ✓' : 'Next →';
+  btnNext.className = isLast ? 'nav-btn done-btn' : 'nav-btn primary';
+
+  const step = STEPS[current];
+
+  const calloutsHTML = step.callouts.map(c => `
+    <div class="callout ${c.type === 'warn' ? 'warn' : ''}">
+      <div class="callout-num">${c.num}</div>
+      <div class="callout-text">${c.text}</div>
+    </div>`).join('');
+
+  // Screenshot block or placeholder
+  let screenshotBlock = '';
+  if (step.screenshot) {
+    const ordinals = {'1st':0,'2nd':1,'3rd':2,'4th':3,'5th':4,'6th':5};
+    const imgIdx = ordinals[step.screenshot];
+    const frameClass = 'screenshot-frame';
+    const hotspotsHTML = (step.hotspots || []).map(h =>
+      `<div class="hotspot-num${h.warn ? ' warn' : ''}" style="left:${h.left};top:${h.top}">${h.num}</div>`
+    ).join('');
+    screenshotBlock = `
+      <div class="screenshot-area">
+        <div class="${frameClass}" style="position:relative;">
+          <img src="${getScreenshotFile(imgIdx)}" alt="Step ${step.num} screenshot" style="cursor:zoom-in" data-hotspots="${encodeURIComponent(JSON.stringify(step.hotspots || []))}" onclick="openLightbox(this.src, JSON.parse(decodeURIComponent(this.dataset.hotspots)))" onerror="this.style.display='none';this.parentNode.style.background='#1a2236';this.parentNode.style.minHeight='180px';" />
+          ${hotspotsHTML}
+        </div>
+      </div>`;
+  } else {
+
+  }
+
+  const warningBlock = step.isWarning ? `
+    <div class="warning-box">
+      <div class="warning-icon">⚠️</div>
+      <div class="warning-text">
+        <strong>Common mistake:</strong> if you select a task category without ticking <strong>'Unassigned only'</strong> first, MyFreight adds your username to the assignee filter automatically — hiding all unassigned tasks and showing you only your own. Always tick this setting first.
+      </div>
+    </div>` : '';
+
+  container.innerHTML = `
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-num">${step.num}</div>
+        <div class="step-header-text">
+          <div class="step-title">${step.title}</div>
+          <div class="step-desc">${step.desc}</div>
+        </div>
+      </div>
+      ${screenshotBlock}
+      <div class="callouts">${calloutsHTML}</div>
+      <div class="instruction">
+        <div class="instruction-label">What to do</div>
+        <div class="instruction-text">${step.instruction}</div>
+      </div>
+      ${warningBlock}
+    </div>`;
+}
+
+const SCREENSHOTS = [
+  '1st.png',
+  '2nd.png',
+  '3rd.png',
+  '4th.png',
+  '5th.png',
+  '6th.png'
+];
+function getScreenshotFile(idx) {
+  return SCREENSHOTS[idx] || '';
+}
+
+function restartGuide() {
+  current = 0;
+  document.getElementById('navRow').style.display = 'flex';
+  render();
+}
+
+// Theme system
+function setTheme(mode) {
+  const html = document.body;
+  const btns = { system: 'btnSystem', light: 'btnLight', dark: 'btnDark' };
+  Object.keys(btns).forEach(k => document.getElementById(btns[k]).classList.remove('active'));
+  document.getElementById(btns[mode]).classList.add('active');
+
+  if (mode === 'system') {
+    const sys = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    html.setAttribute('data-theme', sys);
+    localStorage.removeItem('mfdash-theme');
+    localStorage.setItem('mfdash-follow-system', 'true');
+  } else {
+    html.setAttribute('data-theme', mode);
+    localStorage.setItem('mfdash-theme', mode);
+    localStorage.setItem('mfdash-follow-system', 'false');
+  }
+}
+
+// Init
+(function() {
+  const follow = localStorage.getItem('mfdash-follow-system') !== 'false';
+  const saved  = localStorage.getItem('mfdash-theme');
+  if (follow || !saved) {
+    setTheme('system');
+  } else {
+    setTheme(saved);
+  }
+  render();
+})();
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+  if (localStorage.getItem('mfdash-follow-system') !== 'false') {
+    document.body.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+  }
+});
+
+// Lightbox
+function openLightbox(src, hotspots) {
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightbox-img');
+
+  if (!hotspots || hotspots.length === 0) {
+    lbImg.src = src;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    return;
+  }
+
+  const img = new Image();
+  img.onload = function() {
+    const canvas = document.createElement('canvas');
+    canvas.width  = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    hotspots.forEach(h => {
+      const x = parseFloat(h.left) / 100 * canvas.width;
+      const y = parseFloat(h.top)  / 100 * canvas.height;
+      const r = Math.round(canvas.width * 0.01); // radius scales with image
+      const label = String(h.num);
+
+      // Circle fill
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = h.warn ? '#F5A623' : '#0073FF';
+      ctx.fill();
+
+      // Text
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${Math.round(r * 1.1)}px Montserrat, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(label, x, y);
+    });
+
+    lbImg.src = canvas.toDataURL('image/png');
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+  img.src = src;
+}
+function closeLightbox(e) {
+  if (e && e.target === document.getElementById('lightbox-img')) return;
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+});
+
+</script>
+</body>
+</html>
