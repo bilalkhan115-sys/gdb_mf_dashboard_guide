@@ -737,6 +737,43 @@
     pointer-events: none;
   }
 
+  /* ── Print styles ── */
+  @media print {
+    .topbar,
+    .banner,
+    .nav-row,
+    #lightbox {
+      display: none !important;
+    }
+
+    body {
+      background: #fff !important;
+    }
+
+    .page-header {
+      padding-top: 16px;
+    }
+
+    .step-card {
+      box-shadow: none !important;
+      border: 1px solid #ccc !important;
+      break-inside: avoid;
+    }
+
+    .hotspot-num,
+    .callout-num,
+    .step-num {
+      animation: none !important;
+      box-shadow: none !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .screenshot-frame img {
+      max-width: 100%;
+    }
+  }
+
   /* ── Hotspot markers ── */
   .hotspot-num {
     position: absolute;
@@ -792,6 +829,7 @@
     <button class="theme-btn active" id="btnSystem" onclick="setTheme('system')">System</button>
     <button class="theme-btn" id="btnLight" onclick="setTheme('light')">☀ Light</button>
     <button class="theme-btn" id="btnDark" onclick="setTheme('dark')">◗ Dark</button>
+    <button class="theme-btn" onclick="window.print()" style="margin-left:6px;">⎙ Print</button>
   </div>
 </header>
 
